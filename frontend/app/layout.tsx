@@ -17,7 +17,7 @@ const isValidRoute = (pathname: string) => {
 
 function LoadingScreen() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#1a1a1a]">
+    <div className="flex min-h-screen items-center justify-center">
       <Loader2 className="h-8 w-8 animate-spin text-[#4ade80]" />
     </div>
   );

@@ -11,7 +11,7 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="flex h-screen bg-[#1a1a1a]">
+    <div className="flex h-screen">
       {/* Sidebar */}
       <Sidebar />
 
