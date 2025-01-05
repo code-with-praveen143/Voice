@@ -1,63 +1,185 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+interface Assistant {
+  id: string;
+  name: string;
+  createdAt: string;
+  model: {
+    model: string;
+    messages: Array<{
+      role: string;
+      content: string;
+    }>;
+    provider: string;
+  };
+  firstMessage: string;
+  endCallMessage: string;
+}
 export default function AssistantDashboard() {
-  const [step, setStep] = useState(1); // Step control
+  const [step, setStep] = useState(1);
+  const [assistants, setAssistants] = useState<Assistant[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    firstMessage: '',
-    systemPrompt: '',
-    endCallMessage: '',
+    name: "",
+    firstMessage: "",
+    systemPrompt: "",
+    endCallMessage: "",
   });
+
+  const [isEditable, setIsEditable] = useState(false); // Edit toggle
 
   const handleNext = () => setStep((prev) => prev + 1);
   const handleBack = () => setStep((prev) => prev - 1);
 
-  const handleInputChange = (field:any, value:any) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const vapi_token = process.env.VAPI_TOKEN
+  const vapi_token = process.env.VAPI_TOKEN; // Token from environment variables
+
+  // Fetch assistant data when the component is mounted
+  useEffect(() => {
+    const fetchAssistants = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("http://localhost:5000/assistant/get");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch assistants");
+        }
+
+        const data = await response.json();
+        setAssistants(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch assistants"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAssistants();
+  }, []);
+
+  const toggleEditable = () => setIsEditable((prev) => !prev);
+  useEffect(() => {
+    const fetchAssistants = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("http://localhost:5000/assistant/get");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch assistants");
+        }
+
+        const data = await response.json();
+        setAssistants(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch assistants"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAssistants();
+  }, []);
+
   const createAssistant = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/assistants', { // Use your actual backend API URL
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/assistant/create", {
+        // Use your actual backend API URL
+        method: "POST",
         headers: {
-          "Authorization": `Bearer ${vapi_token}`,
-          'Content-Type': 'application/json'  
+          Authorization: "Bearer YOUR_JWT_TOKEN",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstMessage: formData.firstMessage,
+          modelProvider: "openai",
+          modelName: "gpt-3.5-turbo",
+          content: formData.systemPrompt,
+          knowledgeBaseUrl: "https://example.com/knowledge-base",
+          endCallMessage: formData.endCallMessage,
+          messages: [{ role: "user", content: formData.systemPrompt }],
+          name: formData.name,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to create assistant");
+      }
+
+      const data = await response.json();
+      alert("Assistant created successfully!");
+      setStep(1); // Reset step
+      setFormData({
+        name: "",
+        firstMessage: "",
+        systemPrompt: "",
+        endCallMessage: "",
+      }); // Reset form
+    } catch (error: any) {
+      console.error("Error creating assistant:", error.message);
+      alert("Failed to create assistant: " + error.message);
+    }
+  };
+
+  const saveChanges = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/assistant/update", {
+        method: "POST",
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Nzk5MzdjNzcyZWQ5OWM0NTRhZmU4NyIsImlhdCI6MTczNjA2NTI5NiwiZXhwIjoxNzM2MDY4ODk2fQ.OE3aZLvuJ6S_VWbtIyBAfO7xSPLzSXem8g8ny9WwAKs",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-      console.log('Vapi Response Status:', response.status);
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to create assistant');
+        throw new Error("Failed to save changes");
       }
-  
-      const data = await response.json();
-      alert('Assistant created successfully!');
-      setStep(1); // Reset step
-      setFormData({ name: '', firstMessage: '', systemPrompt: '', endCallMessage: '' }); // Reset form
-    } catch (error:any) {
-      console.error('Error creating assistant:', error.message);
-      alert('Failed to create assistant: ' + error.message);
+
+      alert("Changes saved successfully!");
+      setIsEditable(false);
+    } catch (error) {
+      console.error("Error saving changes:", error);
+      alert("Failed to save changes");
     }
   };
-  
+
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-b from-gray-950 to-gray-900 text-white">
-      <header className="sticky top-0 z-10 backdrop-blur-lg bg-gray-950/80 border-b border-gray-800">
+    <div className="min-h-screen p-4 bg-[#121212] text-white">
+      <header className="sticky top-0 z-10  border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-teal-500">Assistant Dashboard</h1>
+          <h1 className="text-xl font-semibold text-teal-500">
+            Assistant Dashboard
+          </h1>
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-teal-600 hover:bg-teal-700 m-2">Create Assistant</Button>
+              <Button className="bg-teal-600 hover:bg-teal-700 m-2">
+                Create Assistant
+              </Button>
             </DialogTrigger>
             <DialogContent className="bg-gray-900 text-white max-w-lg mx-auto">
               <DialogHeader>
@@ -75,7 +197,9 @@ export default function AssistantDashboard() {
                       id="name"
                       placeholder="Enter assistant name"
                       value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
                       className="bg-gray-800 border-gray-700 focus:ring-teal-500"
                     />
                   </div>
@@ -89,7 +213,9 @@ export default function AssistantDashboard() {
                       id="first-message"
                       placeholder="Hello! How can I assist you today?"
                       value={formData.firstMessage}
-                      onChange={(e) => handleInputChange('firstMessage', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("firstMessage", e.target.value)
+                      }
                       className="bg-gray-800 border-gray-700 focus:ring-teal-500"
                     />
                     <Label htmlFor="system-prompt">System Prompt</Label>
@@ -97,7 +223,9 @@ export default function AssistantDashboard() {
                       id="system-prompt"
                       placeholder="Enter the system instructions for the assistant..."
                       value={formData.systemPrompt}
-                      onChange={(e) => handleInputChange('systemPrompt', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("systemPrompt", e.target.value)
+                      }
                       className="min-h-[150px] bg-gray-800 border-gray-700 focus:ring-teal-500"
                     />
                   </div>
@@ -111,7 +239,9 @@ export default function AssistantDashboard() {
                       id="end-call-message"
                       placeholder="Thank you for contacting us. Have a great day!"
                       value={formData.endCallMessage}
-                      onChange={(e) => handleInputChange('endCallMessage', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("endCallMessage", e.target.value)
+                      }
                       className="bg-gray-800 border-gray-700 focus:ring-teal-500"
                     />
                   </div>
@@ -149,6 +279,55 @@ export default function AssistantDashboard() {
           </Dialog>
         </div>
       </header>
+
+      <div className="mt-8 max-w-7xl mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {assistants.map((assistant) => (
+          <Card key={assistant.id} className="bg-gray-900 border-gray-800">
+            <CardHeader>
+              <CardTitle className="text-teal-500 flex items-center justify-between">
+                {assistant.name}
+                <span className="text-sm text-gray-400">
+                  {new Date(assistant.createdAt).toLocaleDateString()}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label>Model</Label>
+                <p className="text-sm text-gray-400">{assistant.model.model}</p>
+              </div>
+              <div>
+                <Label>Provider</Label>
+                <p className="text-sm text-gray-400">
+                  {assistant.model.provider}
+                </p>
+              </div>
+              {assistant.firstMessage && (
+                <div>
+                  <Label>First Message</Label>
+                  <p className="text-sm text-gray-400">
+                    {assistant.firstMessage}
+                  </p>
+                </div>
+              )}
+              {assistant.endCallMessage && (
+                <div>
+                  <Label>End Call Message</Label>
+                  <p className="text-sm text-gray-400">
+                    {assistant.endCallMessage}
+                  </p>
+                </div>
+              )}
+              <Button
+                variant="outline"
+                className="w-full mt-4 border-gray-700 hover:bg-gray-800"
+              >
+                Edit Assistant
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

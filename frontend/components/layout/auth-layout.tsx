@@ -1,4 +1,3 @@
-import { Navbar } from "@/app/dashboard/components/user-nav";
 
 interface AuthLayoutProps {
   children: React.ReactNode;

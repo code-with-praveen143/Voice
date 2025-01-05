@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { BASE_URL } from "@/app/utils/constants";
-const API_URL = `${BASE_URL}/api`;
 
 type SignupRequest = {
     username: string;
@@ -23,7 +22,7 @@ type OtpVerificationRequest = {
   export const useSignUp = () => {
     return useMutation({
       mutationFn: async (data: SignupRequest) => {
-        const response = await fetch(`${API_URL}/auth/signup`, {
+        const response = await fetch(`${BASE_URL}/user/signup`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
@@ -50,7 +49,7 @@ type OtpVerificationRequest = {
   export const useResendOTP = () => {
     return useMutation({
       mutationFn: async ({ email }: { email: string }) => {
-        const response = await fetch(`${API_URL}/auth/resend-otp`, {
+        const response = await fetch(`${BASE_URL}/auth/resend-otp`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
@@ -67,7 +66,7 @@ type OtpVerificationRequest = {
 export const useVerifyOTP = () => {
   return useMutation({
     mutationFn: async (data:OtpVerificationRequest) => {
-      const response = await fetch(`${API_URL}/auth/verify-otp`, {
+      const response = await fetch(`${BASE_URL}/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -82,7 +81,7 @@ export const useVerifyOTP = () => {
 export const useLogin = () => {
   return useMutation({
     mutationFn: async (data: LoginRequest) => {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${BASE_URL}/user/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -96,7 +95,7 @@ export const useLogin = () => {
 };
 
 async function completeProfile(profileData: any) {
-    const response = await fetch(`${API_URL}/auth/complete-profile`, {
+    const response = await fetch(`${BASE_URL}/auth/complete-profile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

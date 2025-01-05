@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,6 +16,7 @@ import {
   Network,
   Webhook,
   UserCircle,
+  Headset
 } from "lucide-react";
 
 const sidebarNavItems = [
@@ -26,7 +27,6 @@ const sidebarNavItems = [
   },
   {
     title: "Platform",
-    href: "/dashboard/platform",
     icon: Network,
     children: [
       { title: "Assistants", href: "/dashboard/assistants", icon: Users },
@@ -38,12 +38,15 @@ const sidebarNavItems = [
   },
   {
     title: "Logs",
-    href: "/dashboard/logs",
     icon: ClipboardList,
     children: [
-      { title: "Calls", href: "/dashboard/logs/calls", icon: Network },
-      { title: "API Requests", href: "/dashboard/logs/api-requests", icon: Network },
-      { title: "Webhooks", href: "/dashboard/logs/webhooks", icon: Webhook },
+      { title: "Calls", href: "/dashboard/calls", icon: Headset },
+      {
+        title: "API Requests",
+        href: "/dashboard/api-requests",
+        icon: Network,
+      },
+      { title: "Webhooks", href: "/dashboard/webhooks", icon: Webhook },
     ],
   },
   {
@@ -54,48 +57,65 @@ const sidebarNavItems = [
 ];
 
 export function Sidebar() {
-  return (
-    <div className="hidden lg:block border-r border-gray-400 text-white">
-      <div className="flex h-full flex-col">
-        {/* Header */}
-        <div className="flex h-14 items-center border-b border-gray-800 px-6">
-          <Link href="/" className="flex items-center gap-2 font-semibold text-lg text-teal-500">
-            ELIDE
-          </Link>
-        </div>
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
+  const toggleMenu = (title: string) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
+
+  return (
+    <div className="hidden lg:block border-r border-gray-400 text-gray-200">
+      <div className="flex h-full flex-col">
         {/* Scrollable Sidebar */}
         <ScrollArea className="flex-1 px-6">
           <div className="space-y-2 py-4">
             {sidebarNavItems.map((item) => {
               const hasChildren = item.children && item.children.length > 0;
+              const isOpen = openMenus[item.title];
 
               return (
-                <div key={item.href} className="space-y-1">
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
-                    )}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.title}
-                  </Link>
-                  {hasChildren && (
-                    <div className="ml-4 space-y-1 pt-2">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className={cn(
-                            "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
-                          )}
-                        >
-                          <child.icon className="h-4 w-4" />
-                          {child.title}
-                        </Link>
-                      ))}
+                <div key={item.title} className="space-y-1">
+                  {hasChildren ? (
+                    <div>
+                      <button
+                        onClick={() => toggleMenu(item.title)}
+                        className={cn(
+                          "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
+                        )}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.title}
+                      </button>
+                      {isOpen && (
+                        <div className="ml-4 space-y-1 pt-2">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.href}
+                              href={child.href ?? "/"} // Add this line
+                              className={cn(
+                                "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
+                              )}
+                            >
+                              <child.icon className="h-4 w-4" />
+                              {child.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
+                  ) : (
+                    <Link
+                      href={item.href ?? "/"} // Add this line
+                      className={cn(
+                        "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.title}
+                    </Link>
                   )}
                 </div>
               );

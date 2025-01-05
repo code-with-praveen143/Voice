@@ -1,9 +1,9 @@
 import React from 'react'
-import Dashboard from './dashboard/page'
+import LoginPage from './login/page'
 
 const page = () => {
   return (
-    <><Dashboard /></>
+    <><LoginPage /></>
   )
 }
 

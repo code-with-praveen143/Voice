@@ -1,60 +1,46 @@
 const express = require("express");
-const path = require("path");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const { swaggerUi, swaggerSpecs } = require("./swagger/swagger");
+const mongoose = require("mongoose");
+const userRoutes = require("./routes/userRoute");
+const assistantRoutes = require("./routes/assistantRoutes");
+const twilioRoutes = require("./routes/twilioRoute");
+const knowledgebaseRoute = require('./routes/knowledgebaseRoute'); // Import routes
+const callRoutes = require('./routes/callRoutes');
+const logsRoute = require('./routes/logsRoute');
 const connectDB = require("./config/db"); // MongoDB connection
-const logger = require("./config/logger"); // Logger
-const { requestLogger, ipLogger } = require("./middlewares/requestLogger"); // Middleware
-const http = require("http");
-const dotenv = require("dotenv");
-
-dotenv.config();
-
-const assistantRoute = require("./routes/assistantRoute");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const path = require("path"); // Import path module
 
 const app = express();
-const PORT = process.env.PORT || 5001;
-const server = http.createServer(app);
+const port = 5000;
 
-// Middleware
+// Enable CORS for frontend requests
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+    origin: "http://localhost:3000", // Allow requests from your frontend
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+    credentials: true, // Allow cookies and other credentials
   })
 );
-app.options("*", cors()); // Enable preflight requests for all routes
 
-app.use(express.json({ limit: "100mb" })); // Adjust the size as needed
-app.use(express.urlencoded({ extended: false, limit: "100mb" }));
+// Middleware to parse JSON
+app.use(express.json());
+app.use(bodyParser.json());
 
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Use user, assistant, twilio, and knowledge base routes
+app.use("/user", userRoutes);
+app.use("/assistant", assistantRoutes);
+app.use("/twilio", twilioRoutes);
+app.use('/api', knowledgebaseRoute);
+app.use('/api/calls', callRoutes);
+app.use('/api', logsRoute)
+// Connect to MongoDB
 connectDB();
 
-// Request logging middleware
-app.use(requestLogger);
-app.use(ipLogger);
-
-// Swagger UI route
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-
-// Routes
-
-app.use("/api/assistants", assistantRoute);
-
 // Start the server
-server.listen(PORT, () => {
-  logger.info(`Server is running on http://localhost:${PORT}`);
-});
-
-// Log unhandled promise rejections
-process.on("unhandledRejection", (error) => {
-  logger.error(`Unhandled Rejection: ${error.message}`);
-});
-
-// Log uncaught exceptionssocket.io
-process.on("uncaughtException", (error) => {
-  logger.error(`Uncaught Exception: ${error.message}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

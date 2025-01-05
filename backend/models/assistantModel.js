@@ -1,25 +1,25 @@
 const mongoose = require('mongoose');
 
 const assistantSchema = new mongoose.Schema({
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // User reference
-  name: { type: String, required: true }, // Assistant's name
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // User reference
+  name: { type: String }, // Assistant's name
   voice: {
     voiceId: { type: String },
     provider: { type: String },
   },
   model: {
-    model: { type: String, required: true }, // Model type, e.g., "gpt-3.5-turbo"
+    model: { type: String }, // Model type, e.g., "gpt-3.5-turbo"
     messages: [
       {
-        role: { type: String, required: true }, // Role (e.g., "system", "user")
-        content: { type: String, required: true }, // Message content
+        role: { type: String }, // Role (e.g., "system", "user")
+        content: { type: String }, // Message content
       },
     ],
-    provider: { type: String, required: true }, // Provider for the model
+    provider: { type: String }, // Provider for the model
   },
-  firstMessage: { type: String, required: true }, // First message content
+  firstMessage: { type: String }, // First message content
   voicemailMessage: { type: String }, // Voicemail message
-  endCallMessage: { type: String, required: true }, // End call message
+  endCallMessage: { type: String }, // End call message
   transcriber: {
     model: { type: String },
     provider: { type: String },

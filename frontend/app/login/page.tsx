@@ -65,17 +65,8 @@ function LoginPageContent() {
       const response = await loginMutation.mutateAsync(data);
       console.log("Login successful:", response);
       // Store the token in localStorage or a secure cookie
+      if(response.token){
       sessionStorage.setItem("auth_token", response.token);
-      sessionStorage.setItem("username", response.user.username);
-      sessionStorage.setItem("email", response.user.email);
-      sessionStorage.setItem("user_id", response.user._id);
-      sessionStorage.setItem("regulation", response.user.regulation);
-      sessionStorage.setItem("role", response.user.role);
-      // Redirect to dashboard or home page
-      if(response.user.role === "Student"){
-      router.push("/dashboard/chat");
-      }
-      else{
         router.push("/dashboard");
       }
     } catch (error) {
@@ -85,7 +76,7 @@ function LoginPageContent() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-black">
+    <div className="min-h-screen w-full">
       <div className="flex min-h-screen flex-col lg:flex-row">
         <div className="hidden lg:flex lg:flex-1 lg:flex-col lg:items-center lg:justify-center lg:p-8 lg:w-1/2">
           <div className="relative h-64 w-full">
@@ -99,7 +90,7 @@ function LoginPageContent() {
               />
             )}
           </div>
-          <h2 className="mt-8 max-w-xl text-center text-3xl font-bold leading-tight text-gray-700 dark:text-gray-200">
+          <h2 className="mt-8 max-w-xl text-center text-3xl font-bold leading-tight text-gray-700">
             Transform Your Campus Operations with Campusify
           </h2>
         </div>
@@ -120,7 +111,7 @@ function LoginPageContent() {
                   <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl dark:text-white">
                     Welcome back
                   </h1>
-                  <p className="text-sm text-muted-foreground sm:text-base dark:text-gray-400">
+                  <p className="text-sm text-muted-foreground sm:text-base dark:text-white">
                     Enter your credentials to sign in to your account
                   </p>
                 </div>
@@ -146,7 +137,7 @@ function LoginPageContent() {
                             autoCapitalize="none"
                             autoComplete="email"
                             autoCorrect="off"
-                            className="shadow-sm dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                            className="shadow-sm dark:text-white"
                           />
                         </FormControl>
                         <FormMessage />
@@ -176,7 +167,7 @@ function LoginPageContent() {
                               autoCapitalize="none"
                               autoComplete="current-password"
                               autoCorrect="off"
-                              className="shadow-sm dark:bg-gray-800 dark:text-white dark:border-gray-700 pr-10"
+                              className="shadow-sm  dark:text-white pr-10"
                             />
                             <Button
                               type="button"
@@ -211,7 +202,7 @@ function LoginPageContent() {
                   />
                   <Button
                     type="submit"
-                    className="w-full bg-primary text-white shadow-md hover:bg-primary/80"
+                    className="w-full bg-blue-500 hover:bg-blue-500 text-white shadow-md"
                     size="lg"
                   >
                     Sign in
@@ -220,11 +211,11 @@ function LoginPageContent() {
               </Form>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4 text-center">
-              <p className="px-2 text-sm text-muted-foreground dark:text-gray-400">
+              <p className="px-2 text-sm text-muted-foreground">
                 Don&apos;t have an account?{" "}
                 <Button
                   variant="link"
-                  className="p-0 text-secondary hover:underline hover:underline-offset-4"
+                  className="p-0 text-black hover:underline hover:underline-offset-4"
                   onClick={() => router.push("/signup")}
                 >
                   Sign up
@@ -234,14 +225,14 @@ function LoginPageContent() {
                 By continuing, you agree to our{" "}
                 <Link
                   href="/terms"
-                  className="text-blue-600 hover:underline hover:underline-offset-4 dark:text-blue-400"
+                  className="text-blue-600 hover:underline hover:underline-offset-4 dark:text-blue-600"
                 >
                   Terms of Service
                 </Link>{" "}
                 and{" "}
                 <Link
                   href="/privacy"
-                  className="text-blue-600 hover:underline hover:underline-offset-4 dark:text-blue-400"
+                  className="text-blue-600 hover:underline hover:underline-offset-4 dark:text-blue-600"
                 >
                   Privacy Policy
                 </Link>
