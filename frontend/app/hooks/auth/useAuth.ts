@@ -5,8 +5,6 @@ type SignupRequest = {
     username: string;
     email: string;
     password: string;
-    role: string;
-    yearOfJoining: any;
   };
 
 type OtpVerificationRequest = {

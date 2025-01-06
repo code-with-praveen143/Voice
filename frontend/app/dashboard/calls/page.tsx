@@ -51,7 +51,7 @@ const CallLogs = () => {
   }
 
   return (
-    <div className="bg-[#121212] text-white p-4 rounded-lg shadow-md">
+    <div className="bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px] text-white p-4 rounded-lg shadow-md">
       <h1 className="text-lg font-bold border-b border-gray-700 pb-2 mb-4">
         Call Logs
       </h1>

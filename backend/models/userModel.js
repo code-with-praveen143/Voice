@@ -13,7 +13,7 @@ const twilioNumberSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  name: { type: String, required: true },
+  username: { type: String, required: true },
   twilioNumbers: [twilioNumberSchema],  // Array of Twilio numbers for each user
   assistant: { type: Boolean, default: false },  // Reference to Assistant model
 });

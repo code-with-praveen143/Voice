@@ -12,14 +12,15 @@ import {
   TableRow 
 } from "../../../components/ui/table";
 import { APILog, APIResponse } from '../../@types/api';
-
-
+import { Button } from '../../../components/ui/button';
 
 export default function APILogs() {
   const [logs, setLogs] = useState<APILog[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const logsPerPage = 10; // Number of logs per page
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -63,8 +64,23 @@ export default function APILogs() {
     });
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredLogs.length / logsPerPage);
+  const paginatedLogs = filteredLogs.slice(
+    (currentPage - 1) * logsPerPage,
+    currentPage * logsPerPage
+  );
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   return (
-    <div className="min-h-screen bg-[#121212] text-gray-200 p-6">
+    <div className="min-h-screen bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px] text-gray-200 p-6">
       <div className="max-w-[1400px] mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-2">
@@ -107,14 +123,14 @@ export default function APILogs() {
                     {error}
                   </TableCell>
                 </TableRow>
-              ) : filteredLogs.length === 0 ? (
+              ) : paginatedLogs.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8 text-gray-500">
                     No logs found
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredLogs.map((log) => (
+                paginatedLogs.map((log) => (
                   <TableRow 
                     key={log.id}
                     className="border-b border-[#333] hover:bg-[#1a1a1a] transition-colors"
@@ -143,8 +159,36 @@ export default function APILogs() {
             </TableBody>
           </Table>
         </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-4">
+          <Button
+            disabled={currentPage === 1}
+            onClick={handlePreviousPage}
+            className={`px-4 py-2 rounded-md ${
+              currentPage === 1
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            Previous
+          </Button>
+          <span className="text-gray-400">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            disabled={currentPage === totalPages}
+            onClick={handleNextPage}
+            className={`px-4 py-2 rounded-md ${
+              currentPage === totalPages
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );
 }
-

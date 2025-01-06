@@ -169,7 +169,7 @@ export default function AssistantDashboard() {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-[#121212] text-white">
+    <div className="min-h-screen p-4 bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px] text-white">
       <header className="sticky top-0 z-10  border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-xl font-semibold text-teal-500">

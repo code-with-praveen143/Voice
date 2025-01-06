@@ -29,7 +29,7 @@ const DURATION_COLORS = ["#818cf8", "#4ade80"]
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-[#1a1a1a] text-white p-6">
+    <div className="min-h-screen bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px] text-white p-6">
       <div className="max-w-[1400px] mx-auto">
         <h1 className="text-2xl font-semibold mb-6">Overview</h1>
         

@@ -1,52 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "../../components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../../components/ui/form";
-import { useEffect, useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../components/ui/form";
+import { useState } from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
-import logo from "../../utils/logo.png";
-import logo3 from "../../utils/logo3.jpeg";
+import { Eye, EyeOff, Github } from 'lucide-react';
 import { useLogin } from "../hooks/auth/useAuth";
-type LoginRequest = {
-  email: string;
-  password: string;
-};
 
-const ClientSideImage = dynamic(() => import("next/image"), { ssr: false });
 const queryClient = new QueryClient();
+
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
+  password: z.string().min(8, { message: "Password must be at least 8 characters" }),
 });
+
+type LoginRequest = z.infer<typeof signInSchema>;
+
 function LoginPageContent() {
-  const [isClient, setIsClient] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const signInForm = useForm({
+  
+  const signInForm = useForm<LoginRequest>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -54,19 +35,13 @@ function LoginPageContent() {
     },
   });
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   const loginMutation = useLogin();
 
   const onSignInSubmit = async (data: LoginRequest) => {
     try {
       const response = await loginMutation.mutateAsync(data);
-      console.log("Login successful:", response);
-      // Store the token in localStorage or a secure cookie
-      if(response.token){
-      sessionStorage.setItem("auth_token", response.token);
+      if (response.token) {
+        sessionStorage.setItem("auth_token", response.token);
         router.push("/dashboard");
       }
     } catch (error) {
@@ -76,169 +51,129 @@ function LoginPageContent() {
   };
 
   return (
-    <div className="min-h-screen w-full">
-      <div className="flex min-h-screen flex-col lg:flex-row">
-        <div className="hidden lg:flex lg:flex-1 lg:flex-col lg:items-center lg:justify-center lg:p-8 lg:w-1/2">
-          <div className="relative h-64 w-full">
-            {isClient && (
-              <ClientSideImage
-                src={logo}
-                alt="Campusify Logo"
-                layout="fill"
-                objectFit="contain"
-                priority
-              />
-            )}
-          </div>
-          <h2 className="mt-8 max-w-xl text-center text-3xl font-bold leading-tight text-gray-700">
-            Transform Your Campus Operations with Campusify
-          </h2>
-        </div>
+    <div className="min-h-screen bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px]">
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-[400px] rounded-lg bg-[#141414] p-6 shadow-xl">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h1 className="text-2xl font-semibold text-white">Sign into your account</h1>
+              <p className="text-sm text-gray-400">
+                Easily manage your autonomous voice assistants all in one dashboard.
+              </p>
+            </div>
 
-        <div className="flex flex-1 items-center justify-center p-4 w-full lg:w-1/2">
-          <Card className="w-full max-w-[400px] shadow-xl border-0 bg-white/80 dark:bg-gray-900/50 backdrop-blur-sm">
-            <CardHeader className="space-y-2 text-center">
-              <div className="flex flex-col items-center space-y-4">
-                <div className="relative h-16 w-32">
-                  <ClientSideImage
-                    src={logo}
-                    alt="Campusify"
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl dark:text-white">
-                    Welcome back
-                  </h1>
-                  <p className="text-sm text-muted-foreground sm:text-base dark:text-white">
-                    Enter your credentials to sign in to your account
-                  </p>
-                </div>
+            <div className="grid grid-cols-3 gap-3">
+              <Button 
+                variant="outline" 
+                className="w-full border-[#222222] bg-[#141414] text-white hover:bg-[#222222]"
+              >
+                <svg className="mr-2 h-4 w-4 text-[#34A853]" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Google
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full border-[#222222] bg-[#141414] text-white hover:bg-[#222222]"
+              >
+                <Github className="mr-2 h-4 w-4" />
+                GitHub
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full border-[#222222] bg-[#141414] text-white hover:bg-[#222222]"
+              >
+                <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                Discord
+              </Button>
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-[#222222]"></div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <Form {...signInForm}>
-                <form
-                  onSubmit={signInForm.handleSubmit(onSignInSubmit)}
-                  className="space-y-4"
-                >
-                  <FormField
-                    control={signInForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-[#141414] px-2 text-gray-400">OR SIGN IN WITH</span>
+              </div>
+            </div>
+
+            <Form {...signInForm}>
+              <form onSubmit={signInForm.handleSubmit(onSignInSubmit)} className="space-y-4">
+                <FormField
+                  control={signInForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Your email address"
+                          type="email"
+                          className="border-[#222222] bg-[#141414] text-white placeholder:text-gray-400"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={signInForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className="relative">
                           <Input
                             {...field}
-                            placeholder="name@example.com"
-                            type="email"
-                            autoCapitalize="none"
-                            autoComplete="email"
-                            autoCorrect="off"
-                            className="shadow-sm dark:text-white"
+                            placeholder="Your password"
+                            type={showPassword ? "text" : "password"}
+                            className="border-[#222222] bg-[#141414] text-white placeholder:text-gray-400 pr-10"
                           />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={signInForm.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center justify-between">
-                          <FormLabel>Password</FormLabel>
-                          <Link
-                            href="/reset-password"
-                            className="text-xs text-secondary hover:underline hover:underline-offset-4"
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-gray-400"
+                            onClick={() => setShowPassword(!showPassword)}
                           >
-                            Forgot password?
-                          </Link>
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
                         </div>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              placeholder="Enter your password"
-                              type={showPassword ? "text" : "password"}
-                              autoCapitalize="none"
-                              autoComplete="current-password"
-                              autoCorrect="off"
-                              className="shadow-sm  dark:text-white pr-10"
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                              onClick={() => setShowPassword(!showPassword)}
-                              tabIndex={-1}
-                            >
-                              {showPassword ? (
-                                <EyeOff
-                                  className='h-6 w-6 text-dark'
-                                  aria-hidden="true"
-                                />
-                              ) : (
-                                <Eye
-                                  className='h-6 w-6 text-dark'
-                                  aria-hidden="true"
-                                />
-                              )}
-                              <span className="sr-only">
-                                {showPassword
-                                  ? "Hide password"
-                                  : "Show password"}
-                              </span>
-                            </Button>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="submit"
-                    className="w-full bg-blue-500 hover:bg-blue-500 text-white shadow-md"
-                    size="lg"
-                  >
-                    Sign in
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-4 text-center">
-              <p className="px-2 text-sm text-muted-foreground">
-                Don&apos;t have an account?{" "}
-                <Button
-                  variant="link"
-                  className="p-0 text-black hover:underline hover:underline-offset-4"
-                  onClick={() => router.push("/signup")}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button 
+                  type="submit" 
+                  className="w-full bg-[#2F9C7E] hover:bg-[#268C6E] text-white"
                 >
-                  Sign up
+                  Sign In
                 </Button>
-              </p>
-              <p className="px-2 text-xs text-muted-foreground dark:text-gray-400">
-                By continuing, you agree to our{" "}
-                <Link
-                  href="/terms"
-                  className="text-blue-600 hover:underline hover:underline-offset-4 dark:text-blue-600"
-                >
-                  Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link
-                  href="/privacy"
-                  className="text-blue-600 hover:underline hover:underline-offset-4 dark:text-blue-600"
-                >
-                  Privacy Policy
+              </form>
+            </Form>
+
+            {error && (
+              <div className="text-sm text-red-500 text-center">{error}</div>
+            )}
+
+            <div className="space-y-2 text-center text-sm">
+              <p className="text-gray-400">
+                Don't have an account?{" "}
+                <Link href="/signup" className="text-[#2F9C7E] hover:underline">
+                  Sign up
                 </Link>
               </p>
-            </CardFooter>
-          </Card>
+              <Link href="/forgot-password" className="text-[#2F9C7E] hover:underline block">
+                Forgot your password?
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -252,3 +187,4 @@ export default function LoginPage() {
     </QueryClientProvider>
   );
 }
+

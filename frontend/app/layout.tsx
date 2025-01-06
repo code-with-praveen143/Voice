@@ -36,7 +36,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen antialiased bg-[#1a1a1a]">
+      <body className="min-h-screen antialiased bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px]">
         <QueryClientProvider client={queryClient}>
             {isAuthPage || !isValidRoute(pathname) ? (
               <AuthLayout>{children}</AuthLayout>

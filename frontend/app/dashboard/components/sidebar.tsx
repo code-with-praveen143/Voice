@@ -3,20 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ScrollArea } from "../../../components/ui/scroll-area";
-import {
-  LayoutGrid,
-  Phone,
-  FileText,
-  PenTool,
-  Blocks,
-  Users,
-  Mic2,
-  ClipboardList,
-  Network,
-  Webhook,
-  UserCircle,
-  Headset
-} from "lucide-react";
+import { LayoutGrid, Phone, FileText, PenTool, Blocks, Users, ClipboardList, Network, Webhook, UserCircle, Headset, ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from "../../../lib/utils";
 
 const sidebarNavItems = [
@@ -67,11 +54,13 @@ export function Sidebar() {
   };
 
   return (
-    <div className="hidden lg:block border-r border-gray-400 text-gray-200">
+    <div className="hidden lg:block w-64 bg-gray-900 text-gray-200 h-screen fixed left-0 top-0 overflow-y-auto">
       <div className="flex h-full flex-col">
-        {/* Scrollable Sidebar */}
-        <ScrollArea className="flex-1 px-6">
-          <div className="space-y-2 py-4">
+        <div className="flex items-center justify-center h-16 border-b border-gray-800">
+          <h1 className="text-xl font-bold">ELIDE</h1>
+        </div>
+        <ScrollArea className="flex-1 px-4">
+          <nav className="space-y-2 py-4">
             {sidebarNavItems.map((item) => {
               const hasChildren = item.children && item.children.length > 0;
               const isOpen = openMenus[item.title];
@@ -83,18 +72,26 @@ export function Sidebar() {
                       <button
                         onClick={() => toggleMenu(item.title)}
                         className={cn(
-                          "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
+                          "w-full flex items-center justify-between text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white",
+                          isOpen && "bg-gray-800 text-white"
                         )}
                       >
-                        <item.icon className="h-4 w-4" />
-                        {item.title}
+                        <div className="flex items-center gap-2">
+                          <item.icon className="h-4 w-4" />
+                          {item.title}
+                        </div>
+                        {isOpen ? (
+                          <ChevronDown className="h-4 w-4" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4" />
+                        )}
                       </button>
                       {isOpen && (
                         <div className="ml-4 space-y-1 pt-2">
                           {item.children.map((child) => (
                             <Link
                               key={child.href}
-                              href={child.href ?? "/"} // Add this line
+                              href={child.href}
                               className={cn(
                                 "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
                               )}
@@ -108,7 +105,7 @@ export function Sidebar() {
                     </div>
                   ) : (
                     <Link
-                      href={item.href ?? "/"} // Add this line
+                      href={item.href || "/dashboard"}
                       className={cn(
                         "w-full flex items-center justify-start gap-2 text-sm rounded-md px-3 py-2 transition-colors hover:bg-gray-800 hover:text-white"
                       )}
@@ -120,9 +117,10 @@ export function Sidebar() {
                 </div>
               );
             })}
-          </div>
+          </nav>
         </ScrollArea>
       </div>
     </div>
   );
 }
+
