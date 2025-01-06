@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BASE_URL } from "@/app/utils/constants";
+import { BASE_URL } from "../../app/utils/constants";
 
 export default function ResetPassword() {
   const [email, setEmail] = useState("");

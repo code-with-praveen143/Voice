@@ -1,8 +1,8 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
 import { ArrowUpIcon, ArrowDownIcon } from 'lucide-react'
-import { ChartContainer } from "@/components/ui/chart"
+import { ChartContainer } from "../../components/ui/chart"
 
 const metrics = [
   { title: "Total Call Minutes", value: "38", change: "+131.80%", isPositive: true },

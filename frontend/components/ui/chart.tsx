@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, Label } from "recharts"
-import { cn } from "@/lib/utils"
+import { cn } from "../../lib/utils"
 
 interface ChartData {
   name: string

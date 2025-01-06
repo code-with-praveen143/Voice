@@ -16,11 +16,11 @@ import {
   UserCircle,
   LogOut,
   Menu,
-  Headset
+  Headset,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +29,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../../../components/ui/dropdown-menu";
 
 const NavbarItems = [
   {
@@ -60,22 +60,16 @@ const NavbarItems = [
       },
       { title: "Webhooks", href: "/dashboard/webhooks", icon: Webhook },
     ],
-  }
+  },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(0); // Initialize to 0
   const router = useRouter();
   const [username, setUsername] = useState("John Doe");
   const [email, setEmail] = useState("johndoe@example.com");
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleLogout = () => {
     router.push("/");
@@ -90,6 +84,16 @@ export function Navbar() {
       .toUpperCase()
       .slice(0, 2);
   };
+
+  useEffect(() => {
+    // Ensure this runs only in the browser
+    const updateWidth = () => setWindowWidth(window.innerWidth);
+
+    updateWidth(); // Set initial width
+    window.addEventListener("resize", updateWidth);
+
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   const isMobile = windowWidth < 1024;
 

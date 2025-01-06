@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Input } from "@/components/ui/input";
+import { Input } from "../../../components/ui/input";
 import { KeyRound } from 'lucide-react';
 import { 
   Table, 
@@ -10,26 +10,10 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from "@/components/ui/table";
+} from "../../../components/ui/table";
+import { APILog, APIResponse } from '../../@types/api';
 
-interface APILog {
-  time: string;
-  requestUrl: string;
-  requestDurationSeconds: number;
-  requestHttpMethod: string;
-  responseHttpCode: number;
-  resource: string;
-  id: string;
-}
 
-interface APIResponse {
-  results: APILog[];
-  metadata: {
-    totalItems: number;
-    itemsPerPage: number;
-    currentPage: number;
-  };
-}
 
 export default function APILogs() {
   const [logs, setLogs] = useState<APILog[]>([]);

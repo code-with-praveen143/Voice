@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
     await writeFile(tempFilePath, buffer);
 
     // Create FormData for VAPI
-    const vapiFormData = new FormData();
     formData.append("file", tempFilePath);
 
     console.log("Uploading to VAPI...");
@@ -102,44 +101,4 @@ export async function GET() {
 }
 
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  const { id } = params;
 
-  if (!id) {
-    return NextResponse.json(
-      { error: 'PDF ID is required' },
-      { status: 400 }
-    );
-  }
-
-  try {
-    // Call the VAPI API to delete the PDF by ID
-    const response = await fetch(`https://api.vapi.ai/knowledge-base/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${process.env.VAPI_TOKEN}`, // Replace with your actual VAPI token
-      },
-    });
-
-    // Check if the API call was successful
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Error deleting PDF from VAPI:', errorData);
-      return NextResponse.json(
-        { error: 'Failed to delete PDF from VAPI', details: errorData },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(
-      { message: 'PDF deleted successfully' },
-      { status: 200 }
-    );
-  } catch (error: any) {
-    console.error('Error deleting PDF:', error.message);
-    return NextResponse.json(
-      { error: 'An internal server error occurred', details: error.message },
-      { status: 500 }
-    );
-  }
-}

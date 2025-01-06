@@ -1,10 +1,8 @@
 "use client";
 
 import React from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Sidebar } from "@/app/dashboard/components/sidebar";
-import { Navbar } from "@/app/dashboard/components/user-nav";
+import { Sidebar } from "../../app/dashboard/components/sidebar";
+import { Navbar } from "../../app/dashboard/components/user-nav";
 
 interface AppLayoutProps {
   children: React.ReactNode;

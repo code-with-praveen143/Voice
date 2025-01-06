@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo2 from "../utils/logo2.png";

@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "../../../components/ui/scroll-area";
 import {
   LayoutGrid,
   Phone,
@@ -18,6 +17,7 @@ import {
   UserCircle,
   Headset
 } from "lucide-react";
+import { cn } from "../../../lib/utils";
 
 const sidebarNavItems = [
   {
