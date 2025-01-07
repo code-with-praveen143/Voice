@@ -18,6 +18,11 @@ const sidebarNavItems = [
     icon: Blocks,
   },
   {
+    title: "Callbacks",
+    href: "/dashboard/callbacks",
+    icon: Webhook,
+  },
+  {
     title: "Platform",
     icon: Network,
     children: [
