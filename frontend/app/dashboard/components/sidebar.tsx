@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ScrollArea } from "../../../components/ui/scroll-area";
-import { LayoutGrid, Phone, FileText, PenTool, Blocks, Users, ClipboardList, Network, Webhook, UserCircle, Headset, ChevronDown, ChevronRight } from 'lucide-react';
+import { LayoutGrid, Phone, FileText, PenTool, Users, ClipboardList, Network,Blocks, Webhook, UserCircle, Headset, ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from "../../../lib/utils";
 
 const sidebarNavItems = [
@@ -11,6 +11,11 @@ const sidebarNavItems = [
     title: "Overview",
     href: "/dashboard",
     icon: LayoutGrid,
+  },
+  {
+    title: "Integration",  
+    href: "/dashboard/calendly",
+    icon: Blocks,
   },
   {
     title: "Platform",

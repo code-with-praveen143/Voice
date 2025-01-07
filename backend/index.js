@@ -6,6 +6,7 @@ const twilioRoutes = require("./routes/twilioRoute");
 const knowledgebaseRoute = require('./routes/knowledgebaseRoute'); // Import routes
 const callRoutes = require('./routes/callRoutes');
 const logsRoute = require('./routes/logsRoute');
+const calendlyRoutes = require('./routes/tokenRoutes');
 const connectDB = require("./config/db"); // MongoDB connection
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -17,7 +18,7 @@ const port = 5000;
 // Enable CORS for frontend requests
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow requests from your frontend
+    origin: ["http://localhost:3000", "https://voice-seven-mocha.vercel.app"], // Allow requests from your frontend
     methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
     credentials: true, // Allow cookies and other credentials
   })
@@ -37,6 +38,8 @@ app.use("/twilio", twilioRoutes);
 app.use('/api', knowledgebaseRoute);
 app.use('/api/calls', callRoutes);
 app.use('/api', logsRoute)
+app.use('/api/auth', calendlyRoutes);
+
 // Connect to MongoDB
 connectDB();
 

@@ -18,6 +18,7 @@ const validRoutesPrefixes = [
   "/dashboard/calls",
   "/dashboard/api-requests",
   "/dashboard/webhooks",
+  "/dashboard/calendly"
 ];
 
 const isValidRoute = (pathname: string): boolean => {
