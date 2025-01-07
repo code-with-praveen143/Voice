@@ -42,7 +42,7 @@ function LoginPageContent() {
       const response = await loginMutation.mutateAsync(data);
       if (response.token) {
         sessionStorage.setItem("auth_token", response.token);
-        router.push("/dashboard");
+        router.push("/dashboard/calendly");
       }
     } catch (error) {
       console.error("Login error:", error);
