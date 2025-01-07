@@ -1,12 +1,14 @@
 const Token = require('../models/tokenModel');
 
+/**
+ * Handle OAuth callback and save tokens to the database.
+ */
 exports.handleOAuthCallback = async (req, res) => {
   try {
-    const { code } = req.body;
     const body = new URLSearchParams({
       grant_type: 'authorization_code',
-      code: 'XaXsebW8kQjLwwEk8xA9C0AHUP67HlwRHjGfPU56KAA',
-      redirect_uri: 'https://voice-seven-mocha.vercel.app', // Your redirect URI
+      code: req.body.code, // Pass the authorization code from the request body
+      redirect_uri: process.env.REDIRECT_URI, // Your redirect URI
     });
 
     const options = {
@@ -14,7 +16,7 @@ exports.handleOAuthCallback = async (req, res) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${Buffer.from(
-          '1ZFWzFn2oRb1GEy01nEzsVW_ZKGnb39lp5unD89xt6M:-1fYoyx5quyIXy0jeFQAyiOHEn1Psikos_jGTDIds8k'
+          `${process.env.CALENDLY_CLIENT_ID}:${process.env.CALENDLY_CLIENT_SECRET}`
         ).toString('base64')}`,
       },
       body,
@@ -51,5 +53,55 @@ exports.handleOAuthCallback = async (req, res) => {
   } catch (err) {
     console.error('Error handling OAuth callback:', err.message);
     res.status(500).json({ error: 'Failed to handle OAuth callback' });
+  }
+};
+
+/**
+ * Refresh the Calendly access token using the refresh token.
+ */
+exports.refreshCalendlyToken = async () => {
+  try {
+    // Retrieve the latest token from the database
+    const tokenRecord = await Token.findOne().sort({ created_at: -1 });
+    if (!tokenRecord || !tokenRecord.refresh_token) {
+      throw new Error('No refresh token found in the database');
+    }
+
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: tokenRecord.refresh_token,
+    });
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.CALENDLY_CLIENT_ID}:${process.env.CALENDLY_CLIENT_SECRET}`
+        ).toString('base64')}`,
+      },
+      body,
+    };
+
+    const response = await fetch('https://auth.calendly.com/oauth/token', options);
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Error refreshing token:', data);
+      return;
+    }
+
+    const { access_token, refresh_token, token_type, expires_in, created_at } = data;
+
+    // Update the token in the database
+    await Token.findOneAndUpdate(
+      { owner: tokenRecord.owner }, // Update the record for the same owner
+      { access_token, refresh_token, token_type, expires_in, created_at }, // Update fields
+      { upsert: true, new: true } // Insert if not found
+    );
+
+    console.log('Token refreshed successfully at:', new Date().toISOString());
+  } catch (err) {
+    console.error('Error refreshing Calendly token:', err.message);
   }
 };
