@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   twilioNumbers: [twilioNumberSchema],  // Array of Twilio numbers for each user
   assistant: { type: Boolean, default: false },  // Reference to Assistant model
+  plan: { type: String, required: true }, // Reference to
 });
 
 const User = mongoose.model('User', userSchema);

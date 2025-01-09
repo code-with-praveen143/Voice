@@ -42,6 +42,8 @@ function LoginPageContent() {
       const response = await loginMutation.mutateAsync(data);
       if (response.token) {
         sessionStorage.setItem("auth_token", response.token);
+        sessionStorage.setItem("username",response.user.username);
+        sessionStorage.setItem("email", response.user.email);
         router.push("/dashboard/calendly");
       }
     } catch (error) {

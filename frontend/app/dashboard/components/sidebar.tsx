@@ -3,7 +3,22 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ScrollArea } from "../../../components/ui/scroll-area";
-import { LayoutGrid, Phone, FileText, PenTool, Users, ClipboardList, Network,Blocks, Webhook, UserCircle, Headset, ChevronDown, ChevronRight } from 'lucide-react';
+import {
+  LayoutGrid,
+  Phone,
+  FileText,
+  PenTool,
+  Users,
+  ClipboardList,
+  Network,
+  Blocks,
+  Webhook,
+  UserCircle,
+  Headset,
+  ChevronDown,
+  ChevronRight,
+  Calendar,
+} from "lucide-react";
 import { cn } from "../../../lib/utils";
 
 const sidebarNavItems = [
@@ -13,14 +28,9 @@ const sidebarNavItems = [
     icon: LayoutGrid,
   },
   {
-    title: "Integration",  
+    title: "Integration",
     href: "/dashboard/calendly",
     icon: Blocks,
-  },
-  {
-    title: "Callbacks",
-    href: "/dashboard/callbacks",
-    icon: Webhook,
   },
   {
     title: "Platform",
@@ -29,8 +39,7 @@ const sidebarNavItems = [
       { title: "Assistants", href: "/dashboard/assistants", icon: Users },
       { title: "Phone Numbers", href: "/dashboard/phone-numbers", icon: Phone },
       { title: "Files", href: "/dashboard/files", icon: FileText },
-      { title: "Tools", href: "/dashboard/tools", icon: PenTool },
-      { title: "Blocks", href: "/dashboard/blocks", icon: Blocks },
+      { title: "Calender", href: "/dashboard/calender", icon: Calendar },
     ],
   },
   {
@@ -43,7 +52,6 @@ const sidebarNavItems = [
         href: "/dashboard/api-requests",
         icon: Network,
       },
-      { title: "Webhooks", href: "/dashboard/webhooks", icon: Webhook },
     ],
   },
   {
@@ -64,7 +72,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="hidden lg:block w-64 bg-gray-900 text-gray-200 h-screen fixed left-0 top-0 overflow-y-auto">
+    <div className="hidden lg:block w-64 bg-[#050505] text-gray-200 h-screen fixed left-0 top-0 overflow-y-auto">
       <div className="flex h-full flex-col">
         <div className="flex items-center justify-center h-16 border-b border-gray-800">
           <h1 className="text-xl font-bold">ELIDE</h1>
@@ -133,4 +141,3 @@ export function Sidebar() {
     </div>
   );
 }
-

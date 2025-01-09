@@ -5,7 +5,7 @@ const User = require('../models/userModel');
 // Signup user
 const signup = async (req, res) => {
   try {
-    const { email, password, username } = req.body;
+    const { email, password, username, plan } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -17,7 +17,7 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
-    const newUser = new User({ email, password: hashedPassword, username });
+    const newUser = new User({ email, password: hashedPassword, username, plan });
     await newUser.save();
 
     res.status(201).json({ message: 'User created successfully' });
@@ -45,9 +45,9 @@ const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' });
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, user });
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ error: 'Failed to log in' });
@@ -78,5 +78,33 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, forgotPassword };
+const getCurrentUser = async (req, res) => {
+  try {
+    // Get the token from the request headers
+    const token = req.headers.authorization?.split(" ")[1]; // e.g., "Bearer <token>"
+    if (!token) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.SECRET); // Replace with your JWT secret
+    if (!decoded) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    // Fetch the user from the database
+    const user = await User.findById(decoded.id).select("-password"); // Exclude the password field
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Return the user's details
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error fetching user:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+module.exports = { signup, login, forgotPassword, getCurrentUser };
     

@@ -3,9 +3,29 @@
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { LayoutGrid, Phone, FileText, PenTool, Blocks, Users, ClipboardList, Network, Webhook, UserCircle, LogOut, Menu, Headset, ChevronDown } from 'lucide-react';
+import {
+  LayoutGrid,
+  Phone,
+  FileText,
+  PenTool,
+  Blocks,
+  Users,
+  ClipboardList,
+  Network,
+  Webhook,
+  UserCircle,
+  LogOut,
+  Menu,
+  Headset,
+  ChevronDown,
+  Calendar,
+} from "lucide-react";
 import { cn } from "../../../lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../components/ui/avatar";
 import { Button } from "../../../components/ui/button";
 import {
   DropdownMenu,
@@ -21,6 +41,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../../../components/ui/collapsible";
+import dynamic from "next/dynamic";
+import logo from "../../../public/images/logo.png";
 
 const NavbarItems = [
   {
@@ -35,28 +57,47 @@ const NavbarItems = [
       { title: "Assistants", href: "/dashboard/assistants", icon: Users },
       { title: "Phone Numbers", href: "/dashboard/phone-numbers", icon: Phone },
       { title: "Files", href: "/dashboard/files", icon: FileText },
-      { title: "Tools", href: "/dashboard/tools", icon: PenTool },
-      { title: "Blocks", href: "/dashboard/blocks", icon: Blocks },
+      {
+        title: "Calender",
+        href: "/dashboard/calender",
+        icon: Calendar,
+      },
     ],
   },
+
   {
     title: "Logs",
     icon: ClipboardList,
     children: [
       { title: "Calls", href: "/dashboard/calls", icon: Headset },
       { title: "API Requests", href: "/dashboard/api-requests", icon: Network },
-      { title: "Webhooks", href: "/dashboard/webhooks", icon: Webhook },
     ],
   },
 ];
+
+const ClientSideImage = dynamic(() => import("next/image"), { ssr: false });
 
 export function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
   const router = useRouter();
-  const [username, setUsername] = useState("John Doe");
-  const [email, setEmail] = useState("johndoe@example.com");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    const email = sessionStorage.getItem("email");
+    const username = sessionStorage.getItem("username");
+    if (email && username) {
+      setUsername(username);
+      setEmail(email);
+    }
+  }, []);
 
   const handleLogout = () => {
     router.push("/");
@@ -79,7 +120,7 @@ export function Navbar() {
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  const isMobile = windowWidth < 1024;
+  const isMobile = windowWidth < 768;
 
   const NavItem = ({ item, onClick }: { item: any; onClick?: () => void }) => {
     const isActive = pathname === item.href;
@@ -87,12 +128,14 @@ export function Navbar() {
     if (item.children) {
       return (
         <Collapsible className="w-full">
-          <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-4 py-2 text-left text-white bg-slate-800 hover:bg-slate-700">
+          <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-lg px-4 py-2 text-left transition-all duration-200 hover:bg-white/10">
             <div className="flex items-center">
-              <item.icon className="mr-2 h-5 w-5" />
-              <span>{item.title}</span>
+              <item.icon className="mr-2 h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+              <span className="font-medium text-gray-200 group-hover:text-white transition-colors">
+                {item.title}
+              </span>
             </div>
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors transform group-data-[state=open]:rotate-180 duration-200" />
           </CollapsibleTrigger>
           <CollapsibleContent className="ml-4 space-y-1 mt-1">
             {item.children.map((child: any) => (
@@ -100,13 +143,16 @@ export function Navbar() {
                 key={child.href}
                 href={child.href}
                 className={cn(
-                  "flex items-center rounded-lg px-4 py-2 text-white bg-slate-800 hover:bg-slate-700",
-                  pathname === child.href && "bg-slate-600"
+                  "flex items-center rounded-lg px-4 py-2 transition-all duration-200",
+                  "hover:bg-white/10 group",
+                  pathname === child.href ? "bg-white/15" : "text-gray-300"
                 )}
                 onClick={onClick}
               >
-                <child.icon className="mr-2 h-5 w-5" />
-                {child.title}
+                <child.icon className="mr-2 h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+                <span className="font-medium group-hover:text-white transition-colors">
+                  {child.title}
+                </span>
               </Link>
             ))}
           </CollapsibleContent>
@@ -118,69 +164,89 @@ export function Navbar() {
       <Link
         href={item.href}
         className={cn(
-          "flex items-center rounded-lg px-4 py-2 hover:bg-white/10",
-          isActive && "bg-white/20"
+          "flex items-center rounded-lg px-4 py-2 transition-all duration-200",
+          "hover:bg-white/10 group",
+          isActive ? "bg-white/15" : "text-gray-300"
         )}
         onClick={onClick}
       >
-        <item.icon className="mr-2 h-5 w-5" />
-        {item.title}
+        <item.icon className="mr-2 h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+        <span className="font-medium group-hover:text-white transition-colors">
+          {item.title}
+        </span>
       </Link>
     );
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px] shadow-lg">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
-        <div className="flex items-center">
+    <header className="sticky top-0 z-50 backdrop-blur-xl backdrop-saturate-150 bg-black/70 border-b border-white/10">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-8">
           <Button
             variant="ghost"
             size="icon"
-            className="mr-4 lg:hidden hover:bg-white/10"
+            className="lg:hidden hover:bg-white/10 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
           >
             <Menu className="h-6 w-6 text-white" />
           </Button>
-          
-          <Link
-            href="/dashboard"
-            className="text-2xl font-bold tracking-wide text-white"
-          >
-            ELIDE
+
+          <Link href="/dashboard" className="relative flex items-center">
+            {isClient && (
+              <div className="relative h-8 w-32">
+                <ClientSideImage
+                  src={logo}
+                  alt="Logo"
+                  layout="fill"
+                  objectFit="contain"
+                  priority
+                  className="transition-transform duration-200 hover:scale-105"
+                />
+              </div>
+            )}
           </Link>
         </div>
 
-        <div className="flex items-center gap-4">
+        {/* Profile Menu */}
+        <div className="flex items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-10 w-10 rounded-full"
+                className="relative h-10 w-10 rounded-full ring-2 ring-white/10 hover:ring-white/20 transition-all duration-200"
               >
-                <Avatar className="h-10 w-10 bg-white">
+                <Avatar className="h-10 w-10 transition-transform duration-200 hover:scale-105">
                   <AvatarImage src="/avatars/01.png" alt={username} />
-                  <AvatarFallback>{getInitials(username)}</AvatarFallback>
+                  <AvatarFallback className="bg-white/10 text-white">
+                    {getInitials(username)}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-slate-800">
+            <DropdownMenuContent
+              className="w-56 backdrop-blur-xl backdrop-saturate-150 bg-black/90 border border-white/10"
+              align="end"
+            >
               <DropdownMenuLabel className="text-white">
                 <div className="flex flex-col space-y-1">
-                  <span>{username}</span>
+                  <span className="font-medium">{username}</span>
                   <span className="text-sm text-gray-400">{email}</span>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-slate-700" />
+              <DropdownMenuSeparator className="bg-white/10" />
               <DropdownMenuGroup>
-                <DropdownMenuItem className="text-white hover:bg-slate-700 focus:bg-slate-700">
+                <DropdownMenuItem
+                  className="text-gray-200 focus:text-white focus:bg-white/10"
+                  onClick={() => router.push("/dashboard/profile")}
+                >
                   <UserCircle className="mr-2 h-5 w-5" />
                   <span>Profile</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator className="bg-slate-700" />
+              <DropdownMenuSeparator className="bg-white/10" />
               <DropdownMenuItem
                 onClick={handleLogout}
-                className="text-red-400 hover:bg-slate-700 focus:bg-slate-700"
+                className="text-red-400 focus:text-red-300 focus:bg-white/10"
               >
                 <LogOut className="mr-2 h-5 w-5" />
                 <span>Logout</span>
@@ -194,14 +260,14 @@ export function Navbar() {
       {isMobile && (
         <div
           className={cn(
-            "fixed inset-0 top-16 z-50 bg-black/60 transition-opacity",
+            "fixed inset-0 top-16 z-50 backdrop-blur-xl backdrop-saturate-150 bg-black/70 transition-opacity duration-200",
             isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           )}
           onClick={() => setIsOpen(false)}
         >
           <nav
             className={cn(
-              "absolute left-0 top-0 bottom-0 w-72 bg-slate-800 p-4 shadow-xl transition-transform duration-200 ease-in-out",
+              "absolute left-0 top-0 bottom-0 w-72 backdrop-blur-xl backdrop-saturate-150 bg-black/90 border-r border-white/10 p-4 shadow-xl transition-transform duration-300 ease-in-out",
               isOpen ? "translate-x-0" : "-translate-x-full"
             )}
             onClick={(e) => e.stopPropagation()}

@@ -5,6 +5,7 @@ type SignupRequest = {
     username: string;
     email: string;
     password: string;
+    plan: string;
   };
 
 type OtpVerificationRequest = {

@@ -148,7 +148,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] text-gray-300 p-4">
+    <div className="min-h-screen bg-[#1C1C1C] rounded-md text-gray-300 p-4">
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="border-2 border-dashed rounded-lg p-6 text-center">
           <div className="flex flex-col items-center gap-4">

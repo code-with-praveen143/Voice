@@ -1,14 +1,17 @@
 const Token = require('../models/tokenModel');
 
-/**
- * Handle OAuth callback and save tokens to the database.
- */
 exports.handleOAuthCallback = async (req, res) => {
   try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({ error: 'Authorization code is required' });
+    }
+
     const body = new URLSearchParams({
       grant_type: 'authorization_code',
-      code: req.body.code, // Pass the authorization code from the request body
-      redirect_uri: process.env.REDIRECT_URI, // Your redirect URI
+      code,
+      redirect_uri: process.env.REDIRECT_URI,
     });
 
     const options = {
@@ -28,33 +31,30 @@ exports.handleOAuthCallback = async (req, res) => {
 
     if (!response.ok) {
       console.error('Error fetching token:', data);
-      return res.status(response.status).json({ error: data });
+      return res.status(response.status).json({
+        error: data.error || 'Failed to exchange authorization code',
+      });
     }
 
-    const {
-      access_token,
-      refresh_token,
-      token_type,
-      expires_in,
-      created_at,
-      scope,
-      owner,
-      organization,
-    } = data;
+    const { access_token, refresh_token, token_type, expires_in, created_at, scope, owner, organization } = data;
 
     // Save the tokens to the database
-    await Token.findOneAndUpdate(
+    const tokenDoc = await Token.findOneAndUpdate(
       { owner }, // Find by owner URL
-      { access_token, refresh_token, token_type, expires_in, created_at, scope, organization }, // Update fields
+      { access_token, refresh_token, token_type, expires_in, created_at, scope, organization },
       { upsert: true, new: true } // Insert if not found
     );
 
-    return res.status(200).json({ message: 'Tokens saved successfully!', data });
+    return res.status(200).json({
+      message: 'Tokens saved successfully!',
+      token: tokenDoc,
+    });
   } catch (err) {
     console.error('Error handling OAuth callback:', err.message);
-    res.status(500).json({ error: 'Failed to handle OAuth callback' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 /**
  * Refresh the Calendly access token using the refresh token.

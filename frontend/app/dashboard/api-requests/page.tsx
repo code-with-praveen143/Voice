@@ -80,7 +80,7 @@ export default function APILogs() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px] text-gray-200 p-6">
+    <div className="min-h-screen bg-[#1C1C1C] rounded-md text-gray-200 p-6">
       <div className="max-w-[1400px] mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-2">

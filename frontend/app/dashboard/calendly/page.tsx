@@ -14,8 +14,11 @@ export default function Integration() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-[#0A0A0A] bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:32px_32px]">
+    <div className="flex flex-col items-center justify-center h-screen bg-[#1C1C1C] text-white rounded-md px-6">
       <h1 className="text-2xl font-bold mb-4">Calendly Integration</h1>
+      <p className="text-center text-gray-400 text-sm mb-8">
+        ⚠️ This page is currently under development. Some features and functionality may not yet be fully operational. We are actively working on this integration to deliver the best experience for our users. Thank you for your patience and understanding!
+      </p>
       <button
         className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
         onClick={handleOAuthRedirect}
