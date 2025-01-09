@@ -44,7 +44,7 @@ function LoginPageContent() {
         sessionStorage.setItem("auth_token", response.token);
         sessionStorage.setItem("username",response.user.username);
         sessionStorage.setItem("email", response.user.email);
-        router.push("/dashboard/calendly");
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);
