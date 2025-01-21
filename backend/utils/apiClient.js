@@ -1,7 +1,7 @@
 const https = require('https');
 
 // Utility function to make API call to vapi.ai
-const createAssistantAPI = (firstMessage, modelProvider, modelName, messages, knowledgeBaseUrl, endCallMessage, name) => {
+const createAssistantAPI = (firstMessage, modelProvider, modelName, messages, knowledgeBaseUrl, endCallMessage, name, toolIds) => {
   return new Promise((resolve, reject) => {
     const data = JSON.stringify({
       "firstMessage": firstMessage || "",
@@ -14,6 +14,9 @@ const createAssistantAPI = (firstMessage, modelProvider, modelName, messages, kn
         //     "url": knowledgeBaseUrl || ""
         //   }
         // }
+        "toolIds": toolIds || [
+          "e402a911-71a4-4879-90d6-92ec38b9d123"
+        ]
       },
       "endCallMessage": endCallMessage || "",
       "name": name || "bb"

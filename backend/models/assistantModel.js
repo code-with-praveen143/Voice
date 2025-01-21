@@ -16,6 +16,7 @@ const assistantSchema = new mongoose.Schema({
       },
     ],
     provider: { type: String }, // Provider for the model
+    toolIds: [{ type: String }], // Array of tool IDs
   },
   firstMessage: { type: String }, // First message content
   voicemailMessage: { type: String }, // Voicemail message

@@ -7,7 +7,7 @@ const { createAssistantAPI } = require('../utils/apiClient')
 const createAssistant = async (req, res) => {
   try {
     // Extract necessary fields from the request body
-    const { firstMessage, modelProvider, modelName, content, knowledgeBaseUrl, endCallMessage,messages, name } = req.body;
+    const { firstMessage, modelProvider, modelName, content, knowledgeBaseUrl, endCallMessage,messages, name, toolIds } = req.body;
 
     const userId = req.user.id;  // Assume the user is authenticated via JWT
 
@@ -23,7 +23,7 @@ const createAssistant = async (req, res) => {
     }
 
     // Call the API to create the assistant
-    const response = await createAssistantAPI(firstMessage, modelProvider, modelName, messages, knowledgeBaseUrl, endCallMessage, name);
+    const response = await createAssistantAPI(firstMessage, modelProvider, modelName, messages, knowledgeBaseUrl, endCallMessage, name, toolIds);
     res.status(200).json({ message: 'Assistant created successfully', response });
   } catch (error) {
     console.error('Error creating assistant:', error);

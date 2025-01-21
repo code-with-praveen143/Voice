@@ -121,6 +121,7 @@ export default function AssistantDashboard() {
           endCallMessage: formData.endCallMessage,
           messages: [{ role: "user", content: formData.systemPrompt }],
           name: formData.name,
+          toolIds: ["e402a911-71a4-4879-90d6-92ec38b9d123"], 
         }),
       });
 
