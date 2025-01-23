@@ -9,6 +9,8 @@ const logsRoute = require('./routes/logsRoute');
 const calendlyRoutes = require('./routes/tokenRoutes');
 const phonenumberRoutes = require('./routes/phoneNumberRoute');
 const appointmentRoutes = require('./routes/appointmentRoutes');
+const paymentRoutes = require('./routes/phonepeRoutes');
+
 const connectDB = require("./config/db"); // MongoDB connection
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -43,9 +45,10 @@ app.use('/api', logsRoute)
 app.use('/api/auth', calendlyRoutes);
 app.use('/api/phone', phonenumberRoutes)
 app.use("/api", appointmentRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Connect to MongoDB
-connectDB();
+// connectDB();
 
 // Start the server
 app.listen(port, () => {
