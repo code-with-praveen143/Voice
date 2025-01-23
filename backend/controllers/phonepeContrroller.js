@@ -43,7 +43,7 @@ const createOrder = async (req, res) => {
   };
 
   try {
-    const response = await fetchData(phonepeConfig.MERCHANT_BASE_URL, options);
+    const response = await fetchData(`${phonepeConfig.MERCHANT_BASE_URL}/pg/v1/pay`, options);
     console.log(response.data.instrumentResponse.redirectInfo.url);
     res.status(200).json({ msg: "OK", url: response.data.instrumentResponse.redirectInfo.url });
   } catch (error) {
@@ -51,7 +51,6 @@ const createOrder = async (req, res) => {
     res.status(500).json({ error: 'Failed to initiate payment' });
   }
 };
-
 // Check Payment Status
 const checkStatus = async (req, res) => {
   const merchantTransactionId = req.query.id;
