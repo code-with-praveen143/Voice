@@ -106,7 +106,7 @@ export default function Home() {
 
   const fetchPdfs = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/upload`);
+      const response = await fetch(`${BASE_URL}/api/pdfs`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to fetch PDFs');
