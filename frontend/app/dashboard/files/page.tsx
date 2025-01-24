@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "../../../components/ui/button"
 import { FileIcon, Link, Plus, Trash, Upload } from 'lucide-react'
+import { BASE_URL } from '../../utils/constants';
 
 interface PDF {
   id?: any;
@@ -75,7 +76,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append('file', file);
   
-      const response = await fetch('/api/upload', {
+      const response = await fetch(`${BASE_URL}/api/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -105,7 +106,7 @@ export default function Home() {
 
   const fetchPdfs = async () => {
     try {
-      const response = await fetch('/api/upload');
+      const response = await fetch(`${BASE_URL}/api/upload`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to fetch PDFs');
