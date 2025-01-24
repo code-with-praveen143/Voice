@@ -22,7 +22,7 @@ const port = 5000;
 // Enable CORS for frontend requests
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://voice-seven-mocha.vercel.app"], // Allow requests from your frontend
+    origin: ["http://localhost:3000", "https://account.elidepro.com"], // Allow requests from your frontend
     methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
     credentials: true, // Allow cookies and other credentials
   })
