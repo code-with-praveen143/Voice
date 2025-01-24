@@ -48,7 +48,7 @@ app.use("/api", appointmentRoutes);
 app.use('/api/payment', paymentRoutes);
 
 // Connect to MongoDB
-// connectDB();
+connectDB();
 
 // Start the server
 app.listen(port, () => {
