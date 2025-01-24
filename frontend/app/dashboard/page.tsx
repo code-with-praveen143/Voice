@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
 import { ArrowUpIcon, ArrowDownIcon, Loader2 } from 'lucide-react'
 import { ChartContainer } from "../../components/ui/chart"
+import { BASE_URL } from "../utils/constants"
 
 interface Assistant {
   id: string;
@@ -41,7 +42,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchAssistants = async () => {
       try {
-        const response = await fetch('http://localhost:5000/assistant/get');
+        const response = await fetch(`${BASE_URL}/assistant/get`);
         if (!response.ok) throw new Error('Failed to fetch assistants');
         const data = await response.json();
         setAssistants(data);

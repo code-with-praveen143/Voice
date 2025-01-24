@@ -15,6 +15,7 @@ import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Textarea } from "../../../components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardContent } from "../../../components/ui/card";
+import { BASE_URL } from "../../utils/constants";
 interface Assistant {
   id: string;
   name: string;
@@ -58,7 +59,7 @@ export default function AssistantDashboard() {
     const fetchAssistants = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:5000/assistant/get");
+        const response = await fetch(`${BASE_URL}/assistant/get`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch assistants");
@@ -83,7 +84,7 @@ export default function AssistantDashboard() {
     const fetchAssistants = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:5000/assistant/get");
+        const response = await fetch(`${BASE_URL}/assistant/get`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch assistants");
@@ -105,7 +106,7 @@ export default function AssistantDashboard() {
 
   const createAssistant = async () => {
     try {
-      const response = await fetch("http://localhost:5000/assistant/create", {
+      const response = await fetch(`${BASE_URL}/assistant/create`, {
         // Use your actual backend API URL
         method: "POST",
         headers: {
@@ -147,7 +148,7 @@ export default function AssistantDashboard() {
 
   const saveChanges = async () => {
     try {
-      const response = await fetch("http://localhost:5000/assistant/update", {
+      const response = await fetch(`${BASE_URL}/assistant/update`, {
         method: "POST",
         headers: {
           Authorization:

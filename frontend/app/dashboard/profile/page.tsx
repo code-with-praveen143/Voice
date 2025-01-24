@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { BASE_URL } from '../../utils/constants';
 const Profile = () => {
   const [email, setEmail] = useState('codethebug3@gmail.com');
   const [newPassword, setNewPassword] = useState('');
@@ -16,7 +17,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         // Fetch the user profile data
-        const response = await fetch("http://localhost:5000/user/me", {
+        const response = await fetch(`${BASE_URL}/user/me`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("auth_token")}`, // Pass the token from localStorage

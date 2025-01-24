@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
+import { BASE_URL } from "../../utils/constants";
 
 // Define the interface for call logs
 interface CallLog {
@@ -30,7 +31,7 @@ const CallLogs = () => {
     // Fetch call logs from the backend API
     const fetchCallLogs = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/calls/logs");
+        const response = await fetch(`${BASE_URL}/api/calls/logs`);
         if (!response.ok) {
           throw new Error("Failed to fetch call logs");
         }

@@ -13,6 +13,7 @@ import {
 } from "../../../components/ui/table";
 import { APILog, APIResponse } from '../../@types/api';
 import { Button } from '../../../components/ui/button';
+import { BASE_URL } from '../../utils/constants';
 
 export default function APILogs() {
   const [logs, setLogs] = useState<APILog[]>([]);
@@ -25,7 +26,7 @@ export default function APILogs() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/logs');
+        const response = await fetch(`${BASE_URL}/api/logs`);
         if (!response.ok) {
           throw new Error('Failed to fetch logs');
         }

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { BASE_URL } from '../../utils/constants';
 
 export default function OAuthCallback() {
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +18,7 @@ export default function OAuthCallback() {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/api/auth/calendly', {
+        const response = await fetch(`${BASE_URL}/api/auth/calendly`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

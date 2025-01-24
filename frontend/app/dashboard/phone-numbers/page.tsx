@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../components/ui/select";
+import { BASE_URL } from "../../utils/constants";
 
 interface PhoneNumber {
   id: string;
@@ -53,7 +54,7 @@ export default function PhoneNumberManager() {
 
   const fetchAssistants = async () => {
     try {
-      const response = await fetch("http://localhost:5000/assistant/get");
+      const response = await fetch(`${BASE_URL}/assistant/get`);
       if (!response.ok) throw new Error('Failed to fetch assistants');
       const data = await response.json();
       setAssistants(data);
@@ -64,7 +65,7 @@ export default function PhoneNumberManager() {
 
   const fetchPhoneNumbers = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/phone/getphonenumbers");
+      const response = await fetch(`${BASE_URL}/api/phone/getphonenumbers`);
       if (!response.ok) throw new Error('Failed to fetch phone numbers');
       const data = await response.json();
       setPhoneNumbers(data);
@@ -86,7 +87,7 @@ export default function PhoneNumberManager() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/phone/createphonenumber", {
+      const response = await fetch(`${BASE_URL}/api/phone/createphonenumber`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
