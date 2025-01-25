@@ -18,8 +18,10 @@ import {
   ChevronDown,
   ChevronRight,
   Calendar,
+  WalletCards,
 } from "lucide-react";
 import { cn } from "../../../lib/utils";
+import { hrtime } from "process";
 
 const sidebarNavItems = [
   {
@@ -58,6 +60,12 @@ const sidebarNavItems = [
     title: "Profile",
     href: "/dashboard/profile",
     icon: UserCircle,
+  },
+  {
+    title: "Payment",
+    href: "/dashboard/payment",
+    icon: WalletCards,
+    
   },
 ];
 

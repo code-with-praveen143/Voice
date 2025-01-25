@@ -5,7 +5,6 @@ const phoneNumberSchema = new mongoose.Schema({
   number: { type: String, required: true },
   twilioAccountSid: { type: String, required: true },
   twilioAuthToken: { type: String, required: true },
-  assistantId: { type: String, default: null },
   fallbackDestination: { type: Object, default: null },
   name: { type: String, maxlength: 40, default: null },
   server: { type: Object, default: null },

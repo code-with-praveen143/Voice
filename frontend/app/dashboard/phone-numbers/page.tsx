@@ -41,7 +41,6 @@ export default function PhoneNumberManager() {
     number: "",
     twilioAccountSid: "",
     twilioAuthToken: "",
-    assistantId: "5798ddb9-ad7b-44e1-a07a-2ddf6b65de24",
     name: "",
   });
 
@@ -128,10 +127,6 @@ export default function PhoneNumberManager() {
                 You can import from Twilio, vonage, or by one directly from Vapi for use with your assistants.
               </p>
               <div className="flex gap-4 mb-4">
-                <button className="px-6 py-2.5 bg-[#2A4B45] text-[#4FD1C5] rounded-lg hover:bg-[#2A4B45]/80 flex items-center gap-2">
-                  Buy Number
-                  <span className="inline-flex items-center justify-center w-5 h-5 bg-[#4FD1C5] text-[#2A4B45] rounded-full text-xs">?</span>
-                </button>
                 <button 
                   onClick={() => setShowImportModal(true)}
                   className="px-6 py-2.5 bg-[#4FD1C5] text-white rounded-lg hover:bg-[#4FD1C5]/90 flex items-center gap-2"
@@ -155,10 +150,6 @@ export default function PhoneNumberManager() {
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-semibold text-white">Phone Numbers</h1>
               <div className="flex gap-4">
-                <button className="px-4 py-2 bg-[#2A4B45] text-[#4FD1C5] rounded-lg hover:bg-[#2A4B45]/80 flex items-center gap-2">
-                  Buy Number
-                  <span className="inline-flex items-center justify-center w-5 h-5 bg-[#4FD1C5] text-[#2A4B45] rounded-full text-xs">?</span>
-                </button>
                 <button 
                   onClick={() => setShowImportModal(true)}
                   className="px-4 py-2 bg-[#4FD1C5] text-white rounded-lg hover:bg-[#4FD1C5]/90 flex items-center gap-2"
@@ -273,20 +264,21 @@ export default function PhoneNumberManager() {
       {showImportModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
           <div className="bg-[#1E1E1E] rounded-xl w-full max-w-md p-6">
-            <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-xl font-semibold text-white mb-3 flex items-center gap-2">
               <Phone className="w-5 h-5" />
-              Import Phone Number
+              Phone Number
             </h2>
+            <p className="text-[14px] font-normal font-sans mb-4">Import Your Phone Number From Twilio</p>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="flex gap-2 bg-[#141414] p-1 rounded-lg">
-                <Button
+              {/* <div className="flex gap-2 bg-[#141414] p-1 rounded-lg">
+                 <Button
                   type="button"
                   className={`flex-1 py-2 rounded-md text-sm ${
                     formData.provider === "twilio" ? "bg-[#4FD1C5] text-white" : "text-gray-400"
                   }`}
                 >
                   Twilio
-                </Button>
+                </Button> 
                 <Button
                   type="button"
                   className={`flex-1 py-2 rounded-md text-sm ${
@@ -295,21 +287,18 @@ export default function PhoneNumberManager() {
                 >
                   Vonage
                 </Button>
-              </div>
+              </div> */}
 
               <div className="space-y-2">
                 <Label className="text-gray-400">Twilio Phone Number</Label>
-                <div className="flex bg-[#141414] rounded-lg border border-gray-800">
-                  <div className="px-3 py-2 border-r border-gray-800">🇺🇸</div>
                   <Input
                     type="text"
                     name="number"
                     value={formData.number}
                     onChange={handleChange}
-                    className="flex-1 bg-transparent border-0 focus:ring-0"
+                    className="w-full bg-[#141414] border border-gray-800 rounded-lg"
                     placeholder="+14156021922"
                   />
-                </div>
               </div>
 
               <div className="space-y-2">

@@ -110,7 +110,7 @@ export default function AssistantDashboard() {
         // Use your actual backend API URL
         method: "POST",
         headers: {
-          Authorization: "Bearer YOUR_JWT_TOKEN",
+          "Authorization": `Bearer ${sessionStorage.getItem('auth_token')}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
